@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-f25/team01-f25-13
 owner: ucsb-cs156-f25
 repo_name: team01-f25-13
-pull_requests: [{"author":{"id":"U_kgDOCsAPpQ","is_bot":false,"login":"sidushdid","name":""},"headRefName":"xy-UCSBOrganization-create-db","number":44,"title":"Jacskon Cao: Add UCSBOrganization database","url":"https://github.com/ucsb-cs156-f25/team01-f25-13/pull/44"}]
+pull_requests: [{"author":{"id":"U_kgDOCVHjrA","is_bot":false,"login":"yoonseo642","name":""},"headRefName":"yoonseo642-UCSBDiningCommonsMenuItem-create-db","number":45,"title":"ys-create database table for UCSBDiningCommonsMenuItem","url":"https://github.com/ucsb-cs156-f25/team01-f25-13/pull/45"},{"author":{"id":"U_kgDOCsAPpQ","is_bot":false,"login":"sidushdid","name":""},"headRefName":"xy-UCSBOrganization-create-db","number":44,"title":"Jacskon Cao: Add UCSBOrganization database","url":"https://github.com/ucsb-cs156-f25/team01-f25-13/pull/44"}]
