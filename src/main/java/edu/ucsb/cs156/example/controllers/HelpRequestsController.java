@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** This is a REST controller for HelpRequest */
 @Tag(name = "HelpRequest")
-@RequestMapping("/api/helprequests") // Change name of this field??
+@RequestMapping("/api/help_requests") // Change name of this field??
 @RestController
 @Slf4j
-public class HelpRequestController extends ApiController {
+public class HelpRequestsController extends ApiController {
   @Autowired HelpRequestRepository helpRequestRepository;
 
   /**
