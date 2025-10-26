@@ -106,7 +106,7 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
             .tableOrBreakoutRoom("13")
             .requestTime(ldt1)
             .explanation("You need to blah blah blah.")
-            .solved(false)
+            .solved(true)
             .build();
 
     when(helpRequestRepository.save(eq(help_request1))).thenReturn(help_request1);
