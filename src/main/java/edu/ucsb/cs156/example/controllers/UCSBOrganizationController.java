@@ -1,6 +1,7 @@
 package edu.ucsb.cs156.example.controllers;
 
 import edu.ucsb.cs156.example.entities.UCSBOrganization;
+import edu.ucsb.cs156.example.errors.EntityNotFoundException;
 import edu.ucsb.cs156.example.repositories.UCSBOrganizationRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,6 +23,11 @@ public class UCSBOrganizationController extends ApiController {
 
   @Autowired UCSBOrganizationRepository ucsbOrganizationRepository;
 
+  /**
+   * THis method returns a list of all ucsborganizations.
+   *
+   * @return a list of all ucsborganizations
+   */
   @Operation(summary = "List all ucsb organizations")
   @PreAuthorize("hasRole('ROLE_USER')")
   @GetMapping("/all")
@@ -30,17 +36,23 @@ public class UCSBOrganizationController extends ApiController {
     return organizations;
   }
 
-  //   @Operation(summary = "Get a single organization")
-  //   @PreAuthorize("hasRole('ROLE_USER')")
-  //   @GetMapping("")
-  //   public UCSBOrganization getById(@Parameter(name = "orgCode") @RequestParam String orgCode) {
-  //     UCSBOrganization organization =
-  //         ucsbOrganizationRepository
-  //             .findById(orgCode)
-  //             .orElseThrow(() -> new EntityNotFoundException(UCSBOrganization.class, code));
+  /**
+   * This method returns a single organization.
+   *
+   * @param code code of the organization
+   * @return a single organization
+   */
+  @Operation(summary = "Get a single organization")
+  @PreAuthorize("hasRole('ROLE_USER')")
+  @GetMapping("")
+  public UCSBOrganization getById(@Parameter(name = "orgCode") @RequestParam String orgCode) {
+    UCSBOrganization organization =
+        ucsbOrganizationRepository
+            .findById(orgCode)
+            .orElseThrow(() -> new EntityNotFoundException(UCSBOrganization.class, orgCode));
 
-  //     return organization;
-  //   }
+    return organization;
+  }
 
   /**
    * This method creates a new Organization. Accessible only to users with the role "ROLE_ADMIN".
