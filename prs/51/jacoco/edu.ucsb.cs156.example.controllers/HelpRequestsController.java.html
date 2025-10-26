@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HelpRequestController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">team01</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs156.example.controllers</a> &gt; <span class="el_source">HelpRequestController.java</span></div><h1>HelpRequestController.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs156.example.controllers;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HelpRequestsController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">team01</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs156.example.controllers</a> &gt; <span class="el_source">HelpRequestsController.java</span></div><h1>HelpRequestsController.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs156.example.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.ucsb.cs156.example.entities.HelpRequest;
@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** This is a REST controller for HelpRequest */
 @Tag(name = &quot;HelpRequest&quot;)
-@RequestMapping(&quot;/api/helprequests&quot;) // Change name of this field??
+@RequestMapping(&quot;/api/help_requests&quot;) // Change name of this field??
 @RestController
-<span class="nc" id="L24">@Slf4j</span>
-<span class="nc" id="L25">public class HelpRequestController extends ApiController {</span>
+<span class="fc" id="L24">@Slf4j</span>
+<span class="fc" id="L25">public class HelpRequestsController extends ApiController {</span>
   @Autowired HelpRequestRepository helpRequestRepository;
 
   /**
@@ -34,8 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;/all&quot;)
   public Iterable&lt;HelpRequest&gt; allHelpRequests() {
-<span class="nc" id="L37">    Iterable&lt;HelpRequest&gt; requests = helpRequestRepository.findAll();</span>
-<span class="nc" id="L38">    return requests;</span>
+<span class="fc" id="L37">    Iterable&lt;HelpRequest&gt; requests = helpRequestRepository.findAll();</span>
+<span class="fc" id="L38">    return requests;</span>
   }
 
   /**
@@ -70,18 +70,18 @@ import org.springframework.web.bind.annotation.RestController;
     // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     // See: https://www.baeldung.com/spring-date-parameters
 
-<span class="nc" id="L73">    log.info(&quot;requestTime={}&quot;, requestTime);</span>
+<span class="fc" id="L73">    log.info(&quot;requestTime={}&quot;, requestTime);</span>
 
-<span class="nc" id="L75">    HelpRequest helpRequest = new HelpRequest();</span>
-<span class="nc" id="L76">    helpRequest.setRequesterEmail(requesterEmail);</span>
-<span class="nc" id="L77">    helpRequest.setTeamId(teamId);</span>
-<span class="nc" id="L78">    helpRequest.setTableOrBreakoutRoom(tableOrBreakoutRoom);</span>
-<span class="nc" id="L79">    helpRequest.setRequestTime(requestTime);</span>
-<span class="nc" id="L80">    helpRequest.setExplanation(explanation);</span>
-<span class="nc" id="L81">    helpRequest.setSolved(solved);</span>
+<span class="fc" id="L75">    HelpRequest helpRequest = new HelpRequest();</span>
+<span class="fc" id="L76">    helpRequest.setRequesterEmail(requesterEmail);</span>
+<span class="fc" id="L77">    helpRequest.setTeamId(teamId);</span>
+<span class="fc" id="L78">    helpRequest.setTableOrBreakoutRoom(tableOrBreakoutRoom);</span>
+<span class="fc" id="L79">    helpRequest.setRequestTime(requestTime);</span>
+<span class="fc" id="L80">    helpRequest.setExplanation(explanation);</span>
+<span class="fc" id="L81">    helpRequest.setSolved(solved);</span>
 
-<span class="nc" id="L83">    HelpRequest savedHelpRequest = helpRequestRepository.save(helpRequest);</span>
-<span class="nc" id="L84">    return savedHelpRequest;</span>
+<span class="fc" id="L83">    HelpRequest savedHelpRequest = helpRequestRepository.save(helpRequest);</span>
+<span class="fc" id="L84">    return savedHelpRequest;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
