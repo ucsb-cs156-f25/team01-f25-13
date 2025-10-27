@@ -18,6 +18,8 @@ import edu.ucsb.cs156.example.testconfig.TestConfig;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -139,6 +141,66 @@ public class ArticlesControllerTests extends ControllerTestCase {
     // assert
     verify(articlesRepository, times(1)).save(eq(article1));
     String expectedJson = mapper.writeValueAsString(article1);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(expectedJson, responseString);
+  }
+
+  // ID ------------------------
+
+  @Test
+  public void logged_out_users_cannot_get_by_id() throws Exception {
+    mockMvc
+        .perform(get("/api/articles?id=7"))
+        .andExpect(status().is(403)); // logged out users can't get by id
+  }
+
+  @WithMockUser(roles = {"USER"})
+  @Test
+  public void test_that_logged_in_user_can_get_by_id_when_the_id_doesnt_exist() throws Exception {
+
+    // arrange
+
+    when(articlesRepository.findById(eq(123L))).thenReturn(Optional.empty());
+
+    // act
+    MvcResult response =
+        mockMvc.perform(get("/api/articles?id=123")).andExpect(status().isNotFound()).andReturn();
+
+    // assert
+
+    verify(articlesRepository, times(1)).findById(eq(123L));
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("EntityNotFoundException", json.get("type"));
+    assertEquals("Articles with id 123 not found", json.get("message"));
+  }
+
+  @WithMockUser(roles = {"USER"})
+  @Test
+  public void test_that_logged_in_user_can_get_by_id_when_the_id_exists() throws Exception {
+
+    // arrange
+    LocalDateTime date = LocalDateTime.parse("2022-01-03T00:00:00");
+
+    Articles article =
+        Articles.builder()
+            .title("UCSB Housing Project for Fall 2027")
+            .url(
+                "https://dailynexus.com/2025-10-24/construction-begins-on-the-san-benito-student-housing-project-expected-completion-by-fall-2027")
+            .explanation("Article about the new housing project and its foreseen date completion.")
+            .email("ngonzalezornelas@ucsb.edu")
+            .dateAdded(date)
+            .build();
+
+    when(articlesRepository.findById(eq(7L))).thenReturn(Optional.of(article));
+
+    // act
+    MvcResult response =
+        mockMvc.perform(get("/api/articles?id=7")).andExpect(status().isOk()).andReturn();
+
+    // assert
+
+    verify(articlesRepository, times(1)).findById(eq(7L));
+    String expectedJson = mapper.writeValueAsString(article);
     String responseString = response.getResponse().getContentAsString();
     assertEquals(expectedJson, responseString);
   }
