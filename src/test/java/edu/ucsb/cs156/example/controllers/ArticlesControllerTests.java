@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import edu.ucsb.cs156.example.ControllerTestCase;
@@ -24,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -36,6 +38,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
   @MockBean UserRepository userRepository;
 
   // ALL --------------------
+
   @Test
   public void logged_out_users_cannot_get_all() throws Exception {
     mockMvc
@@ -50,6 +53,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
   }
 
   // POST --------------------
+
   @Test
   public void logged_out_users_cannot_post() throws Exception {
     mockMvc.perform(post("/api/articles/post")).andExpect(status().is(403));
@@ -62,6 +66,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
   }
 
   // ALL --------------------
+
   @WithMockUser(roles = {"USER"})
   @Test
   public void logged_in_user_can_get_all_ucsbdates() throws Exception {
@@ -110,6 +115,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
   }
 
   // POST --------------------
+
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
   public void an_admin_user_can_post_a_new_article() throws Exception {
@@ -203,5 +209,99 @@ public class ArticlesControllerTests extends ControllerTestCase {
     String expectedJson = mapper.writeValueAsString(article);
     String responseString = response.getResponse().getContentAsString();
     assertEquals(expectedJson, responseString);
+  }
+
+  // PUT -----------------------
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_can_edit_an_existing_article() throws Exception {
+    // arrange
+
+    LocalDateTime date1 = LocalDateTime.parse("2022-01-03T00:00:00");
+    LocalDateTime date2 = LocalDateTime.parse("2023-01-04T12:12:12");
+
+    Articles articleOrig =
+        Articles.builder()
+            .title("UCSB Housing Project for Fall 2027")
+            .url(
+                "https://dailynexus.com/2025-10-24/construction-begins-on-the-san-benito-student-housing-project-expected-completion-by-fall-2027")
+            .explanation("Article about the new housing project and its foreseen date completion.")
+            .email("ngonzalezornelas@ucsb.edu")
+            .dateAdded(date1)
+            .build();
+
+    Articles articleEdited =
+        Articles.builder()
+            .title("UCSB Shines in MLB Draft with Tyler Bremner Overall No. 2")
+            .url(
+                "https://dailynexus.com/2025-08-06/tyler-bremner-goes-no-2-overall-as-ucsb-shines-in-2025-mlb-draft")
+            .explanation(
+                "Article about the selected UCSB baseball player, making it into the big league.")
+            .email("ngonzalezornelas26@gmail.com")
+            .dateAdded(date2)
+            .build();
+
+    String requestBody = mapper.writeValueAsString(articleEdited);
+
+    when(articlesRepository.findById(eq(67L))).thenReturn(Optional.of(articleOrig));
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/articles?id=67")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // assert
+    verify(articlesRepository, times(1)).findById(67L);
+    verify(articlesRepository, times(1)).save(articleEdited); // should be saved with correct user
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(requestBody, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_cannot_edit_article_that_does_not_exist() throws Exception {
+    // arrange
+
+    LocalDateTime date = LocalDateTime.parse("2022-01-03T00:00:00");
+
+    Articles articleEdited =
+        Articles.builder()
+            .title("UCSB Shines in MLB Draft with Tyler Bremner Overall No. 2")
+            .url(
+                "https://dailynexus.com/2025-08-06/tyler-bremner-goes-no-2-overall-as-ucsb-shines-in-2025-mlb-draft")
+            .explanation(
+                "Article about the selected UCSB baseball player, making it into the big league.")
+            .email("ngonzalezornelas@ucsb.edu")
+            .dateAdded(date)
+            .build();
+
+    String requestBody = mapper.writeValueAsString(articleEdited);
+
+    when(articlesRepository.findById(eq(123L))).thenReturn(Optional.empty());
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/articles?id=123")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+    // assert
+    verify(articlesRepository, times(1)).findById(123L);
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("Articles with id 123 not found", json.get("message"));
   }
 }
