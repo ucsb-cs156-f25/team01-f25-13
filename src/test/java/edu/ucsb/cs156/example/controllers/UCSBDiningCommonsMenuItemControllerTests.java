@@ -219,7 +219,7 @@ public class UCSBDiningCommonsMenuItemControllerTests extends ControllerTestCase
     UCSBDiningCommonsMenuItem ucsbDiningCommonsMenuItemEdited =
         UCSBDiningCommonsMenuItem.builder()
             .diningCommonsCode("Peach Watermelon Pasta")
-            .name("ortega")
+            .name("carillo")
             .station("Entree Specials")
             .build();
 
@@ -255,7 +255,7 @@ public class UCSBDiningCommonsMenuItemControllerTests extends ControllerTestCase
     UCSBDiningCommonsMenuItem ucsbEditedDiningCommonsMenuItem =
         UCSBDiningCommonsMenuItem.builder()
             .diningCommonsCode("Italian Bread")
-            .name("ortega")
+            .name("carillo")
             .station("Entree")
             .build();
 
