@@ -261,9 +261,9 @@ public class UCSBOrganizationControllerTest extends ControllerTestCase {
 
     UCSBOrganization ggEdited =
         UCSBOrganization.builder()
-            .orgCode("GG")
+            .orgCode("UCSB-GG")
             .orgTranslationShort("UCSB-Gaucho-Gaming")
-            .orgTranslation("UCSB-Gaucho-Gaming")
+            .orgTranslation("University-of-California-Santa-Barbara-Gaucho-Gaming")
             .inactive(false)
             .build();
 
