@@ -1,6 +1,5 @@
 package edu.ucsb.cs156.example.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.ucsb.cs156.example.entities.UCSBDate;
 import edu.ucsb.cs156.example.errors.EntityNotFoundException;
 import edu.ucsb.cs156.example.repositories.UCSBDateRepository;
@@ -82,8 +81,7 @@ public class UCSBDatesController extends ApiController {
                   "date (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)")
           @RequestParam("localDateTime")
           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-          LocalDateTime localDateTime)
-      throws JsonProcessingException {
+          LocalDateTime localDateTime) {
 
     // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     // See: https://www.baeldung.com/spring-date-parameters
