@@ -35,13 +35,13 @@
                   },
                   {
                     "column": {
-                      "name": "REQUESTEMAIL",
+                      "name": "REQUESTEREMAIL",
                       "type": "VARCHAR(255)"
                     }
                   },
                   {
                     "column": {
-                      "name": "PRFESSOREMAIL",
+                      "name": "PROFESSOREMAIL",
                       "type": "VARCHAR(255)"
                     }
                   },
