@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -146,5 +147,24 @@ public class RecommendationRequestController extends ApiController {
     recommendationrequestRepository.save(recRequest);
 
     return recRequest;
+  }
+
+  /**
+   * Delete a Recommendation Request
+   *
+   * @param id the id of the recommendation request to delete
+   * @return a message indicating the recommendation request was deleted
+   */
+  @Operation(summary = "Delete a Recommendation Request")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @DeleteMapping("")
+  public Object deleteUCSBDate(@Parameter(name = "id") @RequestParam Long id) {
+    RecommendationRequest recRequest =
+        recommendationrequestRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(RecommendationRequest.class, id));
+
+    recommendationrequestRepository.delete(recRequest);
+    return genericMessage("RecommendationRequest with id %s deleted".formatted(id));
   }
 }
