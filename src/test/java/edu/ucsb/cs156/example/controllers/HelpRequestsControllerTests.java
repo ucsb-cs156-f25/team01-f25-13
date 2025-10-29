@@ -197,7 +197,7 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
 
   @WithMockUser(roles = {"USER"})
   @Test
-  public void logged_in_user_can_get_all_ucsbdates() throws Exception {
+  public void logged_in_user_can_get_all_help_requests() throws Exception {
 
     // arrange
     LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
@@ -243,7 +243,7 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
 
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
-  public void an_admin_user_can_post_a_new_ucsbdate() throws Exception {
+  public void an_admin_user_can_post_a_new_help_request() throws Exception {
     // arrange
 
     LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
@@ -312,7 +312,7 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
 
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
-  public void admin_tries_to_delete_non_existant_ucsbdate_and_gets_right_error_message()
+  public void admin_tries_to_delete_non_existant_help_request_and_gets_right_error_message()
       throws Exception {
     // arrange
 
@@ -333,7 +333,7 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
 
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
-  public void admin_can_edit_an_existing_ucsbdate() throws Exception {
+  public void admin_can_edit_an_existing_help_request() throws Exception {
     // arrange
 
     LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
@@ -343,7 +343,7 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
         HelpRequest.builder()
             .requesterEmail("hao_ding@ucsb.edu")
             .teamId("13")
-            .tableOrBreakoutRoom("13")
+            .tableOrBreakoutRoom("14")
             .requestTime(ldt1)
             .explanation("You need to blah blah blah.")
             .solved(false)
@@ -351,11 +351,11 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
 
     HelpRequest helpRequestEdited =
         HelpRequest.builder()
-            .requesterEmail("hao_ding@ucsb.edu")
-            .teamId("13")
-            .tableOrBreakoutRoom("13")
-            .requestTime(ldt1)
-            .explanation("You need to blah blah blah.")
+            .requesterEmail("zhangchi@ucsb.edu")
+            .teamId("12")
+            .tableOrBreakoutRoom("11")
+            .requestTime(ldt2)
+            .explanation("You need to hehe haha.")
             .solved(true)
             .build();
 
@@ -385,7 +385,7 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
 
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
-  public void admin_cannot_edit_ucsbdate_that_does_not_exist() throws Exception {
+  public void admin_cannot_edit_help_request_that_does_not_exist() throws Exception {
     // arrange
 
     LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
