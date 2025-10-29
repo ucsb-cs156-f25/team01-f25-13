@@ -232,7 +232,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
     RecommendationRequest recRequestEdited =
         RecommendationRequest.builder()
             .requesteremail("Newrequesteremail@mail.com")
-            .professoremail("Newprofessor22email@mail.com")
+            .professoremail("Newprofessoremail@mail.com")
             .explanation("Newprogram")
             .daterequested(ldt3)
             .dateneeded(ldt4)
@@ -241,8 +241,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
 
     String requestBody = mapper.writeValueAsString(recRequestEdited);
 
-    when(recommendationrequestRepository.findById(eq(67L)))
-        .thenReturn(Optional.of(recRequestEdited));
+    when(recommendationrequestRepository.findById(eq(67L))).thenReturn(Optional.of(recRequestOrig));
 
     // act
     MvcResult response =
