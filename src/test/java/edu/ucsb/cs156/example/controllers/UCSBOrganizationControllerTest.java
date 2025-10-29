@@ -10,6 +10,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import edu.ucsb.cs156.example.ControllerTestCase;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -235,6 +237,86 @@ public class UCSBOrganizationControllerTest extends ControllerTestCase {
     MvcResult response =
         mockMvc
             .perform(delete("/api/ucsborganization?orgCode=GG").with(csrf()))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+    // assert
+    verify(ucsbOrganizationRepository, times(1)).findById("GG");
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("UCSBOrganization with id GG not found", json.get("message"));
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_can_edit_an_existing_organization() throws Exception {
+    // arrange
+
+    UCSBOrganization ggOrig =
+        UCSBOrganization.builder()
+            .orgCode("GG")
+            .orgTranslationShort("UCSB-GG")
+            .orgTranslation("UCSB-Gaucho-Gaming")
+            .inactive(true)
+            .build();
+
+    UCSBOrganization ggEdited =
+        UCSBOrganization.builder()
+            .orgCode("UCSB-GG")
+            .orgTranslationShort("UCSB-Gaucho-Gaming")
+            .orgTranslation("University-of-California-Santa-Barbara-Gaucho-Gaming")
+            .inactive(false)
+            .build();
+
+    String requestBody = mapper.writeValueAsString(ggEdited);
+
+    when(ucsbOrganizationRepository.findById(eq("GG"))).thenReturn(Optional.of(ggOrig));
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/ucsborganization?orgCode=GG")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // assert
+    verify(ucsbOrganizationRepository, times(1)).findById("GG");
+    verify(ucsbOrganizationRepository, times(1))
+        .save(ggEdited); // should be saved with updated info
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(requestBody, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_cannot_edit_organization_that_does_not_exist() throws Exception {
+    // arrange
+
+    UCSBOrganization editedOrganization =
+        UCSBOrganization.builder()
+            .orgCode("GG")
+            .orgTranslationShort("UCSB-Gaucho-Gaming")
+            .orgTranslation("UCSB-Gaucho-Gaming")
+            .inactive(false)
+            .build();
+
+    String requestBody = mapper.writeValueAsString(editedOrganization);
+
+    when(ucsbOrganizationRepository.findById(eq("GG"))).thenReturn(Optional.empty());
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/ucsborganization?orgCode=GG")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
             .andExpect(status().isNotFound())
             .andReturn();
 
