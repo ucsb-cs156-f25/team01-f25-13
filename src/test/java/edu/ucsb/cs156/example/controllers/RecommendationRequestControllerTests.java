@@ -224,23 +224,22 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
             .done(true)
             .build();
 
-    LocalDateTime ldt3 = LocalDateTime.parse("2022-01-03T00:00:00");
-    LocalDateTime ldt4 = LocalDateTime.parse("2023-01-03T00:00:00");
+    LocalDateTime ldt3 = LocalDateTime.parse("2024-01-03T00:00:00");
+    LocalDateTime ldt4 = LocalDateTime.parse("2025-01-03T00:00:00");
 
     RecommendationRequest recRequestEdited =
         RecommendationRequest.builder()
-            .requesteremail("requester11email@mail.com")
-            .professoremail("professor22email@mail.com")
-            .explanation("program11")
+            .requesteremail("Newrequesteremail@mail.com")
+            .professoremail("Newprofessoremail@mail.com")
+            .explanation("Newprogram")
             .daterequested(ldt3)
             .dateneeded(ldt4)
-            .done(true)
+            .done(false)
             .build();
 
     String requestBody = mapper.writeValueAsString(recRequestEdited);
 
-    when(recommendationrequestRepository.findById(eq(67L)))
-        .thenReturn(Optional.of(recRequestEdited));
+    when(recommendationrequestRepository.findById(eq(67L))).thenReturn(Optional.of(recRequestOrig));
 
     // act
     MvcResult response =
@@ -269,17 +268,17 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
     LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
     LocalDateTime ldt2 = LocalDateTime.parse("2023-01-03T00:00:00");
 
-    RecommendationRequest recRequestEdited =
+    RecommendationRequest recRequest1 =
         RecommendationRequest.builder()
-            .requesteremail("requester11email@mail.com")
-            .professoremail("professor22email@mail.com")
-            .explanation("program11")
+            .requesteremail("requesteremail@mail.com")
+            .professoremail("professoremail@mail.com")
+            .explanation("program")
             .daterequested(ldt1)
             .dateneeded(ldt2)
             .done(true)
             .build();
 
-    String requestBody = mapper.writeValueAsString(recRequestEdited);
+    String requestBody = mapper.writeValueAsString(recRequest1);
 
     when(recommendationrequestRepository.findById(eq(67L))).thenReturn(Optional.empty());
 
