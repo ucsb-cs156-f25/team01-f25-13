@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /** This is a REST controller for HelpRequest */
-@Tag(name = "HelpRequest")
+@Tag(name = "HelpRequests")
 @RequestMapping("/api/help_requests")
 @RestController
 @Slf4j
