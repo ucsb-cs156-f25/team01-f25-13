@@ -158,7 +158,7 @@ public class RecommendationRequestController extends ApiController {
   @Operation(summary = "Delete a Recommendation Request")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @DeleteMapping("")
-  public Object deleteUCSBDate(@Parameter(name = "id") @RequestParam Long id) {
+  public Object deleteRecommendationRequest(@Parameter(name = "id") @RequestParam Long id) {
     RecommendationRequest recRequest =
         recommendationrequestRepository
             .findById(id)
