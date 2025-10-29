@@ -1,11 +1,13 @@
 package edu.ucsb.cs156.example.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -224,17 +226,17 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
             .done(true)
             .build();
 
-    LocalDateTime ldt3 = LocalDateTime.parse("2022-01-03T00:00:00");
-    LocalDateTime ldt4 = LocalDateTime.parse("2023-01-03T00:00:00");
+    LocalDateTime ldt3 = LocalDateTime.parse("2024-01-03T00:00:00");
+    LocalDateTime ldt4 = LocalDateTime.parse("2025-01-03T00:00:00");
 
     RecommendationRequest recRequestEdited =
         RecommendationRequest.builder()
-            .requesteremail("requester11email@mail.com")
-            .professoremail("professor22email@mail.com")
-            .explanation("program11")
+            .requesteremail("Newrequesteremail@mail.com")
+            .professoremail("Newprofessor22email@mail.com")
+            .explanation("Newprogram")
             .daterequested(ldt3)
             .dateneeded(ldt4)
-            .done(true)
+            .done(false)
             .build();
 
     String requestBody = mapper.writeValueAsString(recRequestEdited);
@@ -271,9 +273,9 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
 
     RecommendationRequest recRequestEdited =
         RecommendationRequest.builder()
-            .requesteremail("requester11email@mail.com")
-            .professoremail("professor22email@mail.com")
-            .explanation("program11")
+            .requesteremail("requesteremail@mail.com")
+            .professoremail("professoremail@mail.com")
+            .explanation("program")
             .daterequested(ldt1)
             .dateneeded(ldt2)
             .done(true)
@@ -299,5 +301,62 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
     verify(recommendationrequestRepository, times(1)).findById(67L);
     Map<String, Object> json = responseToJson(response);
     assertEquals("RecommendationRequest with id 67 not found", json.get("message"));
+  }
+
+  // delete
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_can_delete_a_recRequest() throws Exception {
+    // arrange
+
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+    LocalDateTime ldt2 = LocalDateTime.parse("2023-01-03T00:00:00");
+
+    RecommendationRequest recRequest1 =
+        RecommendationRequest.builder()
+            .requesteremail("requesteremail@mail.com")
+            .professoremail("professoremail@mail.com")
+            .explanation("program")
+            .daterequested(ldt1)
+            .dateneeded(ldt2)
+            .done(true)
+            .build();
+
+    when(recommendationrequestRepository.findById(eq(15L))).thenReturn(Optional.of(recRequest1));
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(delete("/api/recommendationrequest?id=15").with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // assert
+    verify(recommendationrequestRepository, times(1)).findById(15L);
+    verify(recommendationrequestRepository, times(1)).delete(any());
+
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("RecommendationRequest with id 15 deleted", json.get("message"));
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_tries_to_delete_non_existant_recRequest_and_gets_right_error_message()
+      throws Exception {
+    // arrange
+
+    when(recommendationrequestRepository.findById(eq(15L))).thenReturn(Optional.empty());
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(delete("/api/recommendationrequest?id=15").with(csrf()))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+    // assert
+    verify(recommendationrequestRepository, times(1)).findById(15L);
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("RecommendationRequest with id 15 not found", json.get("message"));
   }
 }
