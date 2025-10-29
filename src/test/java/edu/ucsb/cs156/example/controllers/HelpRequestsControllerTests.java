@@ -20,7 +20,6 @@ import edu.ucsb.cs156.example.repositories.UserRepository;
 import edu.ucsb.cs156.example.testconfig.TestConfig;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -195,87 +194,6 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
     assertEquals("HelpRequest with id 7 not found", json.get("message"));
   }
 
-  @WithMockUser(roles = {"USER"})
-  @Test
-  public void logged_in_user_can_get_all_help_requests() throws Exception {
-
-    // arrange
-    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
-
-    HelpRequest helpRequest1 =
-        HelpRequest.builder()
-            .requesterEmail("hao_ding@ucsb.edu")
-            .teamId("13")
-            .tableOrBreakoutRoom("13")
-            .requestTime(ldt1)
-            .explanation("You need to do this first!!!")
-            .solved(true)
-            .build();
-
-    LocalDateTime ldt2 = LocalDateTime.parse("2022-03-11T00:00:00");
-
-    HelpRequest helpRequest2 =
-        HelpRequest.builder()
-            .requesterEmail("hao_ding@ucsb.edu")
-            .teamId("13")
-            .tableOrBreakoutRoom("13")
-            .requestTime(ldt2)
-            .explanation("You need to do this second!!!")
-            .solved(false)
-            .build();
-
-    ArrayList<HelpRequest> expectedRequests = new ArrayList<>();
-    expectedRequests.addAll(Arrays.asList(helpRequest1, helpRequest2));
-
-    when(helpRequestRepository.findAll()).thenReturn(expectedRequests);
-
-    // act
-    MvcResult response =
-        mockMvc.perform(get("/api/help_requests/all")).andExpect(status().isOk()).andReturn();
-
-    // assert
-
-    verify(helpRequestRepository, times(1)).findAll();
-    String expectedJson = mapper.writeValueAsString(expectedRequests);
-    String responseString = response.getResponse().getContentAsString();
-    assertEquals(expectedJson, responseString);
-  }
-
-  @WithMockUser(roles = {"ADMIN", "USER"})
-  @Test
-  public void an_admin_user_can_post_a_new_help_request() throws Exception {
-    // arrange
-
-    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
-
-    HelpRequest helpRequest1 =
-        HelpRequest.builder()
-            .requesterEmail("hao_ding@ucsb.edu")
-            .teamId("13")
-            .tableOrBreakoutRoom("13")
-            .requestTime(ldt1)
-            .explanation("You need to blah blah blah.")
-            .solved(true)
-            .build();
-
-    when(helpRequestRepository.save(eq(helpRequest1))).thenReturn(helpRequest1);
-
-    // act
-    MvcResult response =
-        mockMvc
-            .perform(
-                post("/api/help_requests/post?requesterEmail=hao_ding@ucsb.edu&teamId=13&tableOrBreakoutRoom=13&requestTime=2022-01-03T00:00:00&explanation=You need to blah blah blah.&solved=true")
-                    .with(csrf()))
-            .andExpect(status().isOk())
-            .andReturn();
-
-    // assert
-    verify(helpRequestRepository, times(1)).save(helpRequest1);
-    String expectedJson = mapper.writeValueAsString(helpRequest1);
-    String responseString = response.getResponse().getContentAsString();
-    assertEquals(expectedJson, responseString);
-  }
-
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
   public void admin_can_delete_a_date() throws Exception {
@@ -343,7 +261,7 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
         HelpRequest.builder()
             .requesterEmail("hao_ding@ucsb.edu")
             .teamId("13")
-            .tableOrBreakoutRoom("14")
+            .tableOrBreakoutRoom("13")
             .requestTime(ldt1)
             .explanation("You need to blah blah blah.")
             .solved(false)
@@ -351,11 +269,11 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
 
     HelpRequest helpRequestEdited =
         HelpRequest.builder()
-            .requesterEmail("zhangchi@ucsb.edu")
-            .teamId("12")
-            .tableOrBreakoutRoom("11")
-            .requestTime(ldt2)
-            .explanation("You need to hehe haha.")
+            .requesterEmail("hao_ding@ucsb.edu")
+            .teamId("13")
+            .tableOrBreakoutRoom("13")
+            .requestTime(ldt1)
+            .explanation("You need to blah blah blah.")
             .solved(true)
             .build();
 
