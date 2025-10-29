@@ -260,8 +260,8 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
     HelpRequest helpRequestOrig =
         HelpRequest.builder()
             .requesterEmail("hao_ding@ucsb.edu")
-            .teamId("13")
-            .tableOrBreakoutRoom("13")
+            .teamId("1")
+            .tableOrBreakoutRoom("2")
             .requestTime(ldt1)
             .explanation("You need to blah blah blah.")
             .solved(false)
@@ -269,11 +269,11 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
 
     HelpRequest helpRequestEdited =
         HelpRequest.builder()
-            .requesterEmail("hao_ding@ucsb.edu")
+            .requesterEmail("zhangchi@ucsb.edu")
             .teamId("13")
-            .tableOrBreakoutRoom("13")
-            .requestTime(ldt1)
-            .explanation("You need to blah blah blah.")
+            .tableOrBreakoutRoom("14")
+            .requestTime(ldt2)
+            .explanation("You need to heheheha.")
             .solved(true)
             .build();
 
