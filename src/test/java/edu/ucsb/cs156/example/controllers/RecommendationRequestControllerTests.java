@@ -270,7 +270,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
     LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
     LocalDateTime ldt2 = LocalDateTime.parse("2023-01-03T00:00:00");
 
-    RecommendationRequest recRequestEdited =
+    RecommendationRequest recRequest1 =
         RecommendationRequest.builder()
             .requesteremail("requesteremail@mail.com")
             .professoremail("professoremail@mail.com")
@@ -280,7 +280,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
             .done(true)
             .build();
 
-    String requestBody = mapper.writeValueAsString(recRequestEdited);
+    String requestBody = mapper.writeValueAsString(recRequest1);
 
     when(recommendationrequestRepository.findById(eq(67L))).thenReturn(Optional.empty());
 
